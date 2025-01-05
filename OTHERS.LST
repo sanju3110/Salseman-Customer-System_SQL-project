@@ -1,4 +1,4 @@
-SQL> SELECT * FROM TAB;
+ŚSQL> SELECT * FROM TAB;
 
 TNAME                          TABTYPE  CLUSTERID                               
 ------------------------------ ------- ----------                               
