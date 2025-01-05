@@ -1,0 +1,137 @@
+SQL> SELECT* FROM TAB;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+DEPT                           TABLE                                            
+EMP                            TABLE                                            
+BONUS                          TABLE                                            
+SALGRADE                       TABLE                                            
+SHOP                           TABLE                                            
+DUKAN                          TABLE                                            
+MALL                           TABLE                                            
+BIN$0nCHyfvCTWqmi8yv2kH7Ew==$0 TABLE                                            
+BIN$GS3in+ucRJmUOsQqqwCR6w==$0 TABLE                                            
+MEMBER                         TABLE                                            
+BIN$tEx7wZXMQ+KhstWKeX5ybw==$0 TABLE                                            
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BIN$SsIvzkvnSYailZwfQrSKOQ==$0 TABLE                                            
+BOOKS                          TABLE                                            
+BIN$8ojMzVglROGYm81QTuHTRA==$0 TABLE                                            
+BIN$Va1xHwlWTB2Vsip7S7/okw==$0 TABLE                                            
+ISSUE                          TABLE                                            
+CUSTOMER                       TABLE                                            
+BIN$jDvYMob3S/eEoaZUGBDOZQ==$0 TABLE                                            
+SALESMEN                       TABLE                                            
+ORDERS                         TABLE                                            
+
+20 rows selected.
+
+SQL> DESC CUSTOMER;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CNUM                                      NOT NULL VARCHAR2(6)
+ CNAME                                     NOT NULL VARCHAR2(20)
+ CITY                                               VARCHAR2(15)
+ RATING                                             NUMBER(5)
+ SNUM                                               VARCHAR2(6)
+
+SQL> DESC ORDERS;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ONUM                                      NOT NULL VARCHAR2(10)
+ AMT                                       NOT NULL NUMBER(10,2)
+ ODATE                                              DATE
+ CNUM                                               VARCHAR2(6)
+ SNUM                                               VARCHAR2(6)
+
+SQL> DESC SALESMEN;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SNUM                                      NOT NULL VARCHAR2(6)
+ SNAME                                     NOT NULL VARCHAR2(20)
+ CITY                                               VARCHAR2(15)
+ COMM                                               NUMBER(5,2)
+
+SQL> --51names of all customers matched with the salesmen serving them--
+
+SQL> SELECT C.CNAME, S.SNAME
+  2  FROM CUSTOMER C JOIN SALESMEN S
+  3  USING (SNUM);
+
+no rows selected
+
+SQL> --names of all customers matched with the salesmen serving them--
+SQL> SELECT C.CNAME, S.SNAME
+  2  FROM CUSTOMER C JOIN SALESMEN S
+  3  USING (SNUM);
+
+no rows selected
+
+SQL> --52ists each order number followed by the name of the customer who made the order--
+SQL> SELECT O.ONUM , C.CNAME   --SELECT ORDER NUMBER,CUSTOMER NAME--
+  2  FROM ORDERS O JOIN CUSTOMER C
+  3  USING(CNUM);              --COMMON COLUMN MATCHES--
+
+ONUM       CNAME                                                                
+---------- --------------------                                                 
+O3003      Hardik                                                               
+O3002      Kint                                                                 
+O3005      Kavish                                                               
+O3009      Geeta                                                                
+O3007      Dhruv                                                                
+O3008      Vyomesh                                                              
+O3010      Dhruv                                                                
+O3011      Vyomesh                                                              
+
+8 rows selected.
+
+SQL> --gives the names of both the salesperson and the customer for each
+SQL> order after the order number.--
+> 
+SP2-0734: unknown command beginning "order afte..." - rest of line ignored.
+
+SQL>   --53gives the names of both the salesperson and the customer for each order after the order numb--
+SQL>  -- SELECT ORDER NO,CUSTOMER NAME,SALESMEN NAME--
+SQL> SELECT O.ONUM,C.CNAME,S.SNAME
+  2   -- JOIN FROM ORDER TABLE WITH CUSTOMER TABLE--
+  3  FROM ORDERS O JOIN CUSTOMER C
+  4  USING(CNUM)
+  5  --COMMON COLUMN --
+  6  JOIN SALESMEN S
+  7  --JOIN SALESMEN MATCH--
+  8  ON O.SNUM = S.SNUM;
+
+no rows selected
+
+SQL> --54roduces all customers serviced by salesmen with a commission above 0.12. Output the customers name, the salesperson s name, and the salesperson s rate of commission.--
+SQL> SELECT C.CNAME,S.SNAME,S.COMM
+  2  FROM CUSTOMER C JOIN  SALESMEN S
+  3  --COMMON COLUMN NAME--
+  4  USING(SNUM)
+  5   -- And the salesman's commission is greater than 0.12--
+  6  WHERE S.COMM > 0.12;
+
+no rows selected
+
+
+SQL> -- --55Write a query that calculates the amount of the salesperson s commission on each order  by a customer with a rating above 100-- 
+SQL> SELECT O.ONUM,S.SNAME, (O.AMT * S.COMM)
+  2  --select order num,salesmen name, comm amt--
+  3   FROM ORDERS O JOIN CUSTOMER C
+  4  --fom order table--
+  5   USING(CNUM)
+  6  --cust no matches--
+  7   JOIN SALESMEN S
+  8   ON O.SNUM = S.SNUM
+  9  --customer's rating is greater than 100--
+ 10   WHERE C.RATING > 100;
+
+no rows selected
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SPOOL OFF;

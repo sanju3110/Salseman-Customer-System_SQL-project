@@ -1,0 +1,211 @@
+SQL> SELECT* FROM CUSTOMER;
+
+CNUM   CNAME                CITY                RATING SNUM                     
+------ -------------------- --------------- ---------- ------                   
+C2001  Hardik               London                 100 S1001                    
+C2002  Geeta                Rome                   200 S1003                    
+C2003  Kavish               San Jose               200 S1002                    
+C2004  Dhruv                Berlin                 300 S1002                    
+C2005  Pratham              London                 100 S1001                    
+C2006  Vyomesh              San Jose               300 S1007                    
+C2007  Kint                 Rome                   100 S1004                    
+
+7 rows selected.
+
+SQL> SELECT*FROM CUSTOMERS;
+SELECT*FROM CUSTOMERS
+            *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> SELECT*FROM CUSTOMER;
+
+CNUM   CNAME                CITY                RATING SNUM                     
+------ -------------------- --------------- ---------- ------                   
+C2001  Hardik               London                 100 S1001                    
+C2002  Geeta                Rome                   200 S1003                    
+C2003  Kavish               San Jose               200 S1002                    
+C2004  Dhruv                Berlin                 300 S1002                    
+C2005  Pratham              London                 100 S1001                    
+C2006  Vyomesh              San Jose               300 S1007                    
+C2007  Kint                 Rome                   100 S1004                    
+
+7 rows selected.
+
+SQL> --Display sname and comm. From salesmen in descending order--
+SQL> SELECT SNAME,COMM         --SELECT SNAME AND COMM
+  2  FROM SALESMEN                   --FROM SALESMEN TABLE--
+  3  ORDER BY COMM DESC;                    --ORDER THE RESULT BY COMM COLUMN
+  4  ;
+ORDER BY COMM DESC;                    --ORDER THE RESULT BY COMM COLUMN
+                  *
+ERROR at line 3:
+ORA-00911: invalid character 
+
+
+SQL> SELECT SNAME,COMM         --SELECT SNAME AND COMM
+  2  FROM SALESMEN                   --FROM SALESMEN TABLE--
+  3  ORDER BY COMM DESC;
+
+SNAME                      COMM                                                 
+-------------------- ----------                                                 
+RAKESH                       14                                                 
+Rajesh                      .15                                                 
+Niraj                       .13                                                 
+Piyush                      .12                                                 
+Miti                        .11                                                 
+Haresh                       .1                                                 
+Ram                          .1                                                 
+Nehal                       .09                                                 
+
+8 rows selected.
+
+SQL> --(Assume each salesperson has a 0.12 commission. Write a query on the orders table that
+SQL> will produce the order number,the salesperson number and the amount of the
+SP2-0734: unknown command beginning "will produ..." - rest of line ignored.
+SQL> salesperson s commission for that order)--
+> 
+SP2-0734: unknown command beginning "salesperso..." - rest of line ignored.
+SQL> SELECT ONUM,SNUM,     -- Select the order number salesperson number--AMT * 0.12 AS COMMISSION
+  2  
+SQL> 
+SQL> SELECT ONUM,SNUM,     -- Select the order number salesperson number--
+> AMT * 0.12 AS COMMISSION  -- Calculate the commission by multiplying the amt 0.12
+  2  FROM  ORDERS;
+FROM  ORDERS
+
+
+
+SQL>  SELECT ONUM,SNUM,     -- Select the order number salesperson number--
+> AMT * 0.12 AS COMMISSION
+  2  FROM  ORDERS
+  3  
+SQL> 
+SQL> SELECT ONUM,SNUM,AMT * 0.12 AS COMMISSION
+  2  -- Selectorder number salesperson no and commission into amt 0.12--
+  3  FROM  ORDERS;
+
+ONUM       SNUM   COMMISSION                                                    
+---------- ------ ----------                                                    
+O3001      S1007      2.2428                                                    
+O3003      S1001     92.0628                                                    
+O3002      S1004     228.012                                                    
+O3005      S1002     619.254                                                    
+O3006      S1007    131.7792                                                    
+O3009      S1003    205.5876                                                    
+O3007      S1002        9.09                                                    
+O3008      S1001      566.76                                                    
+O3010      S1002     157.194                                                    
+O3011      S1001   1187.0256                                                    
+
+10 rows selected.
+
+SQL> (Assume each salesperson has a 0.12 commission. Write a query on the orders table that
+  2  will produce the order number,the salesperson number and the amount of the
+  3  salesperson s commission for that order)--
+  4  
+SQL> SELECT ONUM,SNUM,AMT * 0.12 AS COMMISSION
+  2  -- Selectorder number salesperson no and commission into amt 0.12--
+  3  FROM  ORDERS;
+
+ONUM       SNUM   COMMISSION                                                    
+---------- ------ ----------                                                    
+O3001      S1007      2.2428                                                    
+O3003      S1001     92.0628                                                    
+O3002      S1004     228.012                                                    
+O3005      S1002     619.254                                                    
+O3006      S1007    131.7792                                                    
+O3009      S1003    205.5876                                                    
+O3007      S1002        9.09                                                    
+O3008      S1001      566.76                                                    
+O3010      S1002     157.194                                                    
+O3011      S1001   1187.0256                                                    
+
+10 rows selected.
+
+SQL> (Write a query on the customers table that will find the highest rating in each city. Put the
+  2  output in this form.
+  3   For the city (city) , the highest rating is: (rating).)--
+  4  
+SQL> SELECT CITY AS "City", MAX(RATING) AS "Rating"  --SELECT CITY COLUMN CALCULATE MAX RATING--
+> FROM CUSTOMERS                                  --FROM CUSTOMER TABLE--
+> --group the rows by city column--
+  2  GROUP BY CITY;
+GROUP BY CITY
+*
+ERROR at line 2:
+ORA-00923: FROM keyword not found where expected 
+
+
+
+SQL>  SELECT CITY AS "City", MAX(RATING) AS "Rating"  --SELECT CITY COLUMN CALCULATE MAX RATING--
+> 
+  2  
+SQL> SELECT CITY AS "City", MAX(RATING) AS "Rating"
+  2  FROM CUSTOMER
+  3  GROUP BY CITY;
+
+City                Rating                                                      
+--------------- ----------                                                      
+London                 100                                                      
+Berlin                 300                                                      
+Rome                   200                                                      
+San Jose               300                                                      
+
+
+SQL> 
+SQL> (Write a query that lists customers in descending order of rating. Output the rating field
+  2  first, followed by the customer s name and number.
+  3  ,Im )--
+  4  
+SQL>  SELECT  RATING AS "Rating",  CNAME AS "Customer Name"
+  2  FROM CUSTOMERS
+  3  --SORT THE RESULT BY RATING COLUMN IN DESC ORDER--
+  4  ORDER BY RATING DESC;
+FROM CUSTOMERS
+     *
+ERROR at line 2:
+ORA-00942: table or view does not exist 
+
+
+SQL>  SELECT  RATING AS "Rating",  CNAME AS "Customer Name"
+  2  FROM CUSTOMER
+  3   ORDER BY RATING DESC;
+
+    Rating Customer Name                                                        
+---------- --------------------                                                 
+       300 Dhruv                                                                
+       300 Vyomesh                                                              
+       200 Kavish                                                               
+       200 Geeta                                                                
+       100 Kint                                                                 
+       100 Pratham                                                              
+       100 Hardik                                                               
+
+7 rows selected.
+
+SQL> (Write a query that totals the orders for each day and places the results in descending
+  2  order)--
+  3  
+SQL> SELECT ODATE AS "Order Date", SUM(AMT) AS "Total Amount"
+  2  FROM ORDERS       --FROM ORDER TABLE--
+  3  GROUP BY ODATE     --GROUP THE DATA BY ODATE--
+  4  ORDER BY SUM(AMT) DESC;
+
+Order Dat Total Amount                                                          
+--------- ------------                                                          
+10-JUN-90      9891.88                                                          
+10-MAY-90      6032.95                                                          
+04-OCT-90      5160.45                                                          
+03-OCT-90       1900.1                                                          
+10-MAR-90      1884.04                                                          
+10-APR-90      1788.98                                                          
+
+6 rows selected.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SPOOL OFF;

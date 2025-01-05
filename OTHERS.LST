@@ -1,0 +1,382 @@
+SQL> SELECT * FROM TAB;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+DEPT                           TABLE                                            
+EMP                            TABLE                                            
+BONUS                          TABLE                                            
+SALGRADE                       TABLE                                            
+SHOP                           TABLE                                            
+DUKAN                          TABLE                                            
+MALL                           TABLE                                            
+BIN$0nCHyfvCTWqmi8yv2kH7Ew==$0 TABLE                                            
+BIN$GS3in+ucRJmUOsQqqwCR6w==$0 TABLE                                            
+MEMBER                         TABLE                                            
+BIN$tEx7wZXMQ+KhstWKeX5ybw==$0 TABLE                                            
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BIN$SsIvzkvnSYailZwfQrSKOQ==$0 TABLE                                            
+BOOKS                          TABLE                                            
+BIN$8ojMzVglROGYm81QTuHTRA==$0 TABLE                                            
+BIN$Va1xHwlWTB2Vsip7S7/okw==$0 TABLE                                            
+ISSUE                          TABLE                                            
+CUSTOMER                       TABLE                                            
+BIN$jDvYMob3S/eEoaZUGBDOZQ==$0 TABLE                                            
+SALESMEN                       TABLE                                            
+ORDERS                         TABLE                                            
+
+20 rows selected.
+
+SQL> SELECT *
+  2  FROM CUSTOMER
+  3  WHERE CITY IN (SELECT CITY
+  4                 FROM CUSTOMER
+  5                   WHERE SNUM = (SELECT SNUM
+  6                                  FROM SALESMEN
+  7                                   WHERE SNAME = 'PIYUSH')
+  8  );
+
+no rows selected
+
+SQL> --customer located in cities where salesperson  PIYUSH  has customer.--
+SQL> 
+SQL> --select cust name, salesmen name--
+SQL> SELECT C.CNAME AS Customer_Name, S.SNAME
+  2  --from customer table--
+  3  FROM CUSTOMER C JOIN  SALESMEN S
+  4  --match customer with common colun name--
+  5  ON C.SNUM = S.SNUM;
+
+no rows selected
+
+SQL> --. List all salesmen who are living in same city without duplicate rows.--
+SQL> -- Select distinct customer name and city
+SQL> SELECT DISTINCT C.CNAME, C.CITY
+  2  ---- Match customers with salesmen--
+  3  FROM CUSTOMER C JOIN SALESMEN S
+  4  ON C.SNUM = S.SNUM
+  5  --WHERE NAME IS EQUAL TO PIYUSH--
+  6  WHERE S.SNAME = 'PIYUSH';
+
+no rows selected
+
+SQL> --Extract all orders of  PIYUSH .--
+SQL> SELECT *                          -- Select all columns from the ORDERS table
+  2  FROM ORDERS                       -- Querying the ORDERS table
+  3  WHERE SNUM = (                    -- Filter orders where the SNUM matches the result of the subquery
+  4  SELECT SNUM                   -- Subquery to fetch the SNUM (Salesman Number)
+  5      FROM SALESMEN                 -- Querying the SALESMEN table
+  6      WHERE SNAME = 'PIYUSH'        -- Filter for the salesman with the name 'PIYUSH'
+  7  );
+
+no rows selected
+
+SQL> --Extract all orders of LONDON S salesmen--
+SQL> SELECT *                           -- SELECT ALL COLUMNS FROM THE ORDERS TABLE--
+> FROM ORDERS                        -- SPECIFY THE ORDERS TABLE AS THE DATA SOURCE--
+> WHERE SNUM IN (                    -- FILTER ORDERS WHERE SNUM MATCHES ANY VALUE RETURNED BY THE SUBQUERY--
+>     SELECT SNUM                    -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY--
+>     FROM SALESMEN                  -- QUERY THE SALESMEN TABLE--
+>     WHERE CITY = 'LONDON'          -- FILTER SALESMEN WHO ARE LOCATED IN THE CITY 'LONDON'--
+> 
+  2  
+SQL> SELECT *                           -- SELECT ALL COLUMNS FROM THE ORDERS TABLE
+  2  FROM ORDERS                        -- SPECIFY THE ORDERS TABLE AS THE DATA SOURCE
+  3  WHERE SNUM IN (                    -- FILTER ORDERS WHERE SNUM MATCHES ANY VALUE RETURNED BY THE SUBQUERY
+  4      SELECT SNUM                    -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+  5      FROM SALESMEN                  -- QUERY THE SALESMEN TABLE
+  6      WHERE CITY = 'LONDON'          -- FILTER SALESMEN WHO ARE LOCATED IN THE CITY 'LONDON'
+  7  );
+
+no rows selected
+
+SQL> --Find all customers whose cnum is 1000 above than the snum of  PIYUSH --
+SQL> SELECT *                           -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                      -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+  3  WHERE CNUM > (                     -- FILTER CUSTOMERS WHERE CNUM IS GREATER THAN THE VALUE FROM THE SUBQUERY PLUS 1000
+  4      SELECT SNUM                    -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+  5      FROM SALESMEN                  -- QUERY THE SALESMEN TABLE
+  6      WHERE SNAME = 'PIYUSH'         -- FILTER SALESMEN WHOSE NAME IS 'PIYUSH'
+  7  ) + 1000;                          -- ADD 1000 TO THE RESULT OF THE SUBQUERY AND COMPARE WITH CNUM
+  8  
+SQL> SELECT *                           -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                      -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+  3  WHERE CNUM > (                     -- FILTER CUSTOMERS WHERE CNUM IS GREATER THAN THE VALUE FROM THE SUBQUERY PLUS 1000
+  4      SELECT SNUM                    -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+  5      FROM SALESMEN                  -- QUERY THE SALESMEN TABLE
+  6      WHERE SNAME = 'PIYUSH'         -- FILTER SALESMEN WHOSE NAME IS 'PIYUSH'
+  7  ) + 1000;                          -- ADD 1000 TO THE RESULT OF THE SUBQUERY AND COMPARE WITH CNUM
+  8  SELECT *                           -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  9  FROM CUSTOMER                      -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+ 10  WHERE CNUM > (                     -- FILTER CUSTOMERS WHERE CNUM IS GREATER THAN THE VALUE FROM THE SUBQUERY PLUS 1000
+ 11      SELECT SNUM                    -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+ 12      FROM SALESMEN                  -- QUERY THE SALESMEN TABLE
+ 13      WHERE SNAME = 'PIYUSH'         -- FILTER SALESMEN WHOSE NAME IS 'PIYUSH'
+ 14  ) + 1000;                          -- ADD 1000 TO THE RESULT OF THE SUBQUERY AND COMPARE WITH CNUM--
+ 15  
+SQL> SELECT *                           -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                      -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+  3  WHERE CNUM > (                     -- FILTER CUSTOMERS WHERE CNUM IS GREATER THAN THE VALUE FROM THE SUBQUERY PLUS 1000
+  4      SELECT SNUM                    -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+  5      FROM SALESMEN                  -- QUERY THE SALESMEN TABLE
+  6   -- FILTER SALESMEN WHOSE NAME IS 'PIYUSH'--
+  7      WHERE SNAME = 'PIYUSH'
+  8  ) + 1000;
+WHERE CNUM > (                     -- FILTER CUSTOMERS WHERE CNUM IS GREATER THAN THE VALUE FROM THE SUBQUERY PLUS 1000
+      *
+ERROR at line 3:
+ORA-01722: invalid number 
+
+
+SQL> SELECT *                               -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                          -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+  3  WHERE TO_NUMBER(CNUM) > (              -- CAST CNUM TO NUMBER AND COMPARE IT WITH THE SUBQUERY RESULT
+  4      SELECT SNUM                        -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+  5      FROM SALESMEN                      -- QUERY THE SALESMEN TABLE
+  6      WHERE SNAME = 'PIYUSH'             -- FILTER SALESMEN WHOSE NAME IS 'PIYUSH'
+  7  ) + 1000;                              -- ADD 1000 TO THE RESULT OF THE SUBQUERY AND COMPARE WITH CNUM
+  8  
+SQL> 
+SQL> SELECT *                               -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                          -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+  3  WHERE TO_NUMBER(CNUM) > (              -- CAST CNUM TO NUMBER AND COMPARE IT WITH THE SUBQUERY RESULT
+  4      SELECT SNUM                        -- SELECT THE SNUM (SALESMAN NUMBER) FROM THE SUBQUERY
+  5      FROM SALESMEN                      -- QUERY THE SALESMEN TABLE
+  6      WHERE SNAME = 'PIYUSH') + 1000;
+WHERE TO_NUMBER(CNUM) > (              -- CAST CNUM TO NUMBER AND COMPARE IT WITH THE SUBQUERY RESULT
+      *
+ERROR at line 3:
+ORA-01722: invalid number 
+
+
+SQL> --Count the no. of customers with the rating above than average Rating of  LONDON .--
+SQL> SELECT COUNT(*)
+  2  FROM CUSTOMER
+  3  WHERE RATING > (
+  4      SELECT AVG(RATING)
+  5      FROM CUSTOMER
+  6      WHERE CITY = 'LONDON'
+  7  );
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL> -- Produce the name and rating of all customers who have above average Rating.
+SQL> SELECT CNAME, RATING                 -- SELECT THE CNAME AND RATING COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                        -- SPECIFY THE CUSTOMER TABLE AS THE DATA SOURCE
+  3  WHERE RATING > (                     -- FILTER CUSTOMERS WHO HAVE A RATING GREATER THAN THE AVERAGE RATING
+  4      SELECT AVG(RATING)               -- CALCULATE THE AVERAGE RATING FROM THE CUSTOMER TABLE
+  5      FROM CUSTOMER
+  6  );
+
+CNAME                    RATING                                                 
+-------------------- ----------                                                 
+Geeta                       200                                                 
+Kavish                      200                                                 
+Dhruv                       300                                                 
+Vyomesh                     300                                                 
+
+SQL> --List all salesmen with customers located in their cities.
+SQL> SELECT S.*                               -- SELECT ALL COLUMNS FROM THE SALESMEN TABLE (ALIAS 'S')
+  2  FROM SALESMEN S, CUSTOMER C              -- FROM THE SALESMEN AND CUSTOMER  TABLES
+  3  WHERE S.CITY = C.CITY;
+
+SNUM   SNAME                CITY                  COMM                          
+------ -------------------- --------------- ----------                          
+1003   Miti                 London                 .11                          
+1001   Piyush               London                 .12                          
+1002   Niraj                San Jose               .13                          
+1003   Miti                 London                 .11                          
+1001   Piyush               London                 .12                          
+1002   Niraj                San Jose               .13                          
+
+6 rows selected.
+
+SQL> SELECT SALESMEN.*                               -- SELECT ALL COLUMNS FROM THE SALESMEN TABLE (ALIAS 'S')
+  2  FROM SALESMEN S, CUSTOMER C              -- FROM THE SALESMEN AND CUSTOMER  TABLES
+  3  WHERE S.CITY = C.CITY;
+SELECT SALESMEN.*                               -- SELECT ALL COLUMNS FROM THE SALESMEN TABLE (ALIAS 'S')
+                *
+ERROR at line 1:
+ORA-00904: "SALESMEN": invalid identifier 
+
+
+SQL> --Select all customers whose rating doesn t match with any rating customer of  SAN JOSE .--
+SQL> SELECT *                               -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER C1                        -- FROM THE CUSTOMER TABLE ALIAS 'C1'
+  3  WHERE NOT EXISTS (                      -- ONLY INCLUDE CUSTOMERS WHERE NO MATCH EXISTS FOR THE CONDITION BELOW
+  4      SELECT *                             -- SELECT ALL COLUMNS (THIS SELECT IS USED ONLY FOR EXISTENCE CHECK)
+  5      FROM CUSTOMER C2                    -- QUERY THE CUSTOMER TABLE AGAIN
+  6      WHERE C1.RATING = C2.RATING         -- WHERE THE RATING OF 'C1' CUSTOMER MATCHES THE RATING OF 'C2' CUSTOMER
+  7        AND C2.CITY = 'SAN JOSE'
+  8  );
+
+CNUM   CNAME                CITY                RATING SNUM                     
+------ -------------------- --------------- ---------- ------                   
+C2007  Kint                 Rome                   100 S1004                    
+C2005  Pratham              London                 100 S1001                    
+C2001  Hardik               London                 100 S1001                    
+C2006  Vyomesh              San Jose               300 S1007                    
+C2004  Dhruv                Berlin                 300 S1002                    
+C2003  Kavish               San Jose               200 S1002                    
+C2002  Geeta                Rome                   200 S1003                    
+
+7 rows selected.
+
+SQL> --Create a union of two queries that shows the names,cities and ratings of all customers.
+SQL> Those with rating of >=200 should display  HIGH RATING  and those with <200 should
+SP2-0734: unknown command beginning "Those with..." - rest of line ignored.
+SQL> display  LOW RATING .--
+> 
+SP2-0734: unknown command beginning "display  L..." - rest of line ignored.
+SQL> SELECT CNAME, CITY, RATING,                     -- SELECT CUSTOMER NAME, CITY, AND RATING COLUMNS FROM THE CUSTOMER TABLE
+  2         CASE WHEN RATING >= 200 THEN 'HIGH RATING' -- CHECK IF THE CUSTOMER'S RATING IS GREATER THAN OR EQUAL TO 200
+  3              ELSE 'LOW RATING'                   -- IF THE RATING IS LESS THAN 200, ASSIGN 'LOW RATING'
+  4         END AS RATING_CATEGORY                   -- LABEL THE RESULT AS 'RATING_CATEGORY'
+  5  FROM CUSTOMER                                    -- FROM THE CUSTOMER TABLE
+  6  UNION ALL                                         -- COMBINE THE RESULTS OF THE TWO SELECT QUERIES, INCLUDING DUPLICATE ROWS
+  7  SELECT CNAME, CITY, RATING,                     -- SELECT CUSTOMER NAME, CITY, AND RATING COLUMNS AGAIN FROM THE CUSTOMER TABLE
+  8         CASE WHEN RATING >= 200 THEN 'HIGH RATING' -- SAME CHECK AS ABOVE FOR 'HIGH RATING' OR 'LOW RATING'
+  9              ELSE 'LOW RATING'                   -- ASSIGN 'LOW RATING' IF THE RATING IS BELOW 200
+ 10         END AS RATING_CATEGORY
+ 11  FROM CUSTOMER;
+
+CNAME                CITY                RATING RATING_CATE                     
+-------------------- --------------- ---------- -----------                     
+Hardik               London                 100 LOW RATING                      
+Geeta                Rome                   200 HIGH RATING                     
+Kavish               San Jose               200 HIGH RATING                     
+Dhruv                Berlin                 300 HIGH RATING                     
+Pratham              London                 100 LOW RATING                      
+Vyomesh              San Jose               300 HIGH RATING                     
+Kint                 Rome                   100 LOW RATING                      
+Hardik               London                 100 LOW RATING                      
+Geeta                Rome                   200 HIGH RATING                     
+Kavish               San Jose               200 HIGH RATING                     
+Dhruv                Berlin                 300 HIGH RATING                     
+
+CNAME                CITY                RATING RATING_CATE                     
+-------------------- --------------- ---------- -----------                     
+Pratham              London                 100 LOW RATING                      
+Vyomesh              San Jose               300 HIGH RATING                     
+Kint                 Rome                   100 LOW RATING                      
+
+14 rows selected.
+
+SQL> -- Find all customers with orders on 3rd october 1990 using correlate sub query.
+>
+SP2-0042: unknown command " 0 - " - rest of line ignored.
+SQL> -- -- Find all customers with orders on 3rd october 1990 using correlate sub query--
+SQL> SELECT *                               -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE 
+  2  FROM CUSTOMER C                        -- FROM THE CUSTOMER TABLE 
+  3  WHERE EXISTS (                         -- FILTER TO ONLY INCLUDE CUSTOMERS WHERE THE SUBQUERY RETURNS AT LEAST ONE RESULT
+  4      SELECT *                             -- SELECT ALL COLUMNS (USED ONLY TO CHECK EXISTENCE OF A MATCHING ORDER)
+  5      FROM ORDERS O                        -- QUERY THE ORDERS TABLE 
+  6      WHERE O.CNUM = C.CNUM                -- WHERE THE CUSTOMER NUMBER FROM THE ORDERS TABLE MATCHES THE CUSTOMER NUMBER IN THE CUSTOMER TABLE
+  7        AND O.ODATE = TO_DATE('03-OCT-1990', 'DD-MON-YYYY')
+  8  );
+
+CNUM   CNAME                CITY                RATING SNUM                     
+------ -------------------- --------------- ---------- ------                   
+C2007  Kint                 Rome                   100 S1004                    
+
+SQL> --Find all customers having rating greater than any customer in  ROME .--
+SQL>  SELECT *                             -- SELECT ALL COLUMNS FROM THE CUSTOMER TABLE
+  2  FROM CUSTOMER                         -- FROM THE CUSTOMER TABLE
+  3  WHERE RATING > (                     -- FILTER CUSTOMERS WHERE THEIR RATING IS GREATER THAN THE MAX RATING FROM THE SUBQUERY
+  4      SELECT MAX(RATING)                -- SELECT THE MAXIMUM RATING FROM THE CUSTOMER TABLE
+  5      FROM CUSTOMER                     -- FROM THE CUSTOMER TABLE
+  6      WHERE CITY = 'ROME'
+  7  );
+
+no rows selected
+
+SQL> --Insert a row into salesmen table with the values snum is s1008,salesmen name is  RAKESH , city is unknown and commission is 14%.--
+SQL> INSERT INTO SALESMEN (SNUM, SNAME, CITY, COMM)  -- INSERT: SNUM, SNAME, CITY, AND COMM
+  2  ---- PROVIDE VALUES--
+  3  VALUES ('S1008', 'RAKESH', NULL, 14);
+
+1 row created.
+
+SQL> --Create another table London_staff having same structure as salesmen table--
+SQL> CREATE TABLE London_staff AS               -- CREATE A NEW TABLE NAMED 'London_staff' BASED ON THE RESULT OF THE SELECT QUERY
+  2  SELECT *                                  -- SELECT ALL COLUMNS FROM THE SALESMEN TABLE
+  3  FROM SALESMEN
+  4  WHERE CITY = 'LONDON';
+
+Table created.
+
+SQL> --Delete all orders from customer  PIYUSH  from the order table.--
+SQL> DELETE FROM ORDERS                          -- DELETE RECORDS FROM THE 'ORDERS' TABLE
+  2  WHERE CNUM IN (                             -- CONDITION TO DELETE ONLY ORDERS FROM CUSTOMERS THAT MATCH THE SUBQUERY
+  3      SELECT CNUM                             -- SELECT THE 'CNUM' (CUSTOMER NUMBER) FROM THE 'CUSTOMER' TABLE
+  4      FROM CUSTOMER                           -- FROM THE 'CUSTOMER' TABLE
+  5      WHERE CNAME = 'PIYUSH'
+  6  );
+
+0 rows deleted.
+
+SQL> --Set the ratings of all the customers of PIYUSH to 400--
+SQL> UPDATE CUSTOMER                              -- UPDATE RECORDS IN THE 'CUSTOMER' TABLE
+  2  SET RATING = 400                             -- SET THE 'RATING' COLUMN TO 400
+  3  WHERE CNUM IN (                       -- APPLY THE UPDATE TO CUSTOMERS WHOSE 'CNUM' IS IN THE RESULT OF THE SUBQUERY
+  4      SELECT CNUM                              -- SELECT THE 'CNUM' (CUSTOMER NUMBER) FROM THE 'CUSTOMER' TABLE
+  5      FROM CUSTOMER                            -- FROM THE 'CUSTOMER' TABLE
+  6      WHERE SNUM = (                                -- FILTER CUSTOMERS WHO ARE SERVICED BY THE SALESMAN IDENTIFIED BY 'PIYUSH'
+  7          SELECT SNUM                          -- SELECT THE 'SNUM' (SALESMAN NUMBER) FROM THE 'SALESMEN' TABLE
+  8          FROM SALESMEN                                   -- FROM THE 'SALESMEN' TABLE
+  9          WHERE SNAME = 'PIYUSH')
+ 10  );
+
+0 rows updated.
+
+SQL> --Increase the rating of all the customers in ROME by 100.--
+SQL> UPDATE CUSTOMER                         -- UPDATE RECORDS CUSTOMER TABLE
+  2  SET RATING = RATING + 100           -- INCREASE THE 'RATING' COLUMN BY 100  3  WHERE CITY = 'ROME';
+
+0 rows updated.
+
+SQL>  --Double the commission of all salesmen of LONDON.--
+SQL> UPDATE SALESMEN               -- UPDATE RECORDS IN THE SALESMAN TABLE
+  2  SET COMM = COMM * 2
+  3  WHERE CITY = 'LONDON';
+
+0 rows updated.
+
+SQL> --Set ratings for all customers in LONDON to NULL--
+SQL> UPDATE CUSTOMER                              -- UPDATE RECORDS IN THE 'CUSTOMER' TABLE
+  2  SET RATING = NULL                            -- SET THE 'RATING' COLUMN TO NULL FOR THE SELECTED RECORDS
+  3  WHERE CITY = 'LONDON';
+
+0 rows updated.
+
+SQL> --Delete all salesmen who have at least one customer with a rating of 100 from salesmen
+SQL> table--
+> 
+SP2-0042: unknown command "table- " - rest of line ignored.
+SQL> DELETE FROM SALESMEN               -- DELETE RECORDS FROM THE 'SALESMEN' TABLE
+  2  WHERE SNUM IN (
+  3      SELECT SNUM                  -- SELECT THE 'SNUM'FROM THE 'SALESMEN' TABLE
+  4      FROM SALESMEN S, CUSTOMER C  -- JOIN THE 'SALESMEN' AND 'CUSTOMER' TABLE
+  5      WHERE S.SNUM = C.SNUM                   -- JOIN CONDITION
+  6        AND C.RATING = 100
+  7  );
+    SELECT SNUM                  -- SELECT THE 'SNUM'FROM THE 'SALESMEN' TABLE
+           *
+ERROR at line 3:
+ORA-00918: column ambiguously defined 
+
+
+SQL> DELETE FROM SALESMEN              -- DELETE RECORDS FROM THE 'SALESMEN' TABLE
+  2  WHERE SNUM IN (                 -- ONLY DELETE SALESMEN WHOSE 'SNUM' IS IN THE RESULT OF THE SUBQUERY
+  3      SELECT S.SNUM                  -- SALESMAN'S NUMBER FROM SALESMEN TABLE
+  4      FROM SALESMEN S, CUSTOMER C    -- JOIN THE 'SALESMEN' AND 'CUSTOMER' TABLE
+  5      WHERE S.SNUM = C.SNUM          -- JOIN CONDITION
+  6        AND C.RATING = 100
+  7  );
+
+0 rows deleted.
+
+SQL> SPOOL OFF;
